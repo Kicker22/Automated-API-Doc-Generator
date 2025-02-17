@@ -1,0 +1,4 @@
+{
+    "ignore": ["openapi.json", "openapi.yaml"]
+  }
+  

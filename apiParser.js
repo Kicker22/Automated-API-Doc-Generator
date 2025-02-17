@@ -1,108 +1,43 @@
-// express-api-extractor
-// This script scans Express.js routes and generates an OpenAPI JSON file with parameters and request bodies
+const express = require("express");
+const swaggerUi = require("swagger-ui-express");
+const fs = require("fs");
+const yaml = require("yaml");
 
-const fs = require('fs');
-const path = require('path');
-const express = require('express');
-const yaml = require('js-yaml');
-
-// Sample Express API file for learning (you'll replace this with your real app files)
+//initialize express app
 const app = express();
-app.use(express.json()); // Middleware to parse JSON bodies
 
-// Sample Routes
-app.get("/users/:id", (req, res) => {
-    res.json({ id: req.params.id, name: "Alice" });
-});
+const { extractRoutes } = require("./src/services/openApiServices"); // ✅ Path updated
+const userRoutes = require("./src/routes/users"); // ✅ Path updated
+app.use("/users", userRoutes);
 
-app.post("/users", (req, res) => {
-    res.status(201).json({ id: 3, name: req.body.name });
-});
 
-app.put("/users/:id", (req, res) => {
-    res.json({ id: req.params.id, name: req.body.name });
-});
-app.delete("/users/:id", (req, res) => {
-    res.json({ message: "user was deleted"});
-})
 
-// Function to extract routes from an Express app
-function extractRoutes(app) {
-    const openApiSpec = {
-        openapi: "3.0.0",
-        info: {
-            title: "Extracted Express API",
-            version: "1.0.0",
-        },
-        paths: {},
-    };
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-    app._router.stack.forEach((middleware) => {
-        if (middleware.route) {
-            const path = middleware.route.path;
-            const methods = Object.keys(middleware.route.methods);
+// Register routes
+app.get("/", (req, res) => res.send("Welcome to the API! Navigate to /api-docs for Swagger UI."));
 
-            if (!openApiSpec.paths[path]) {
-                openApiSpec.paths[path] = {};
-            }
-
-            methods.forEach((method) => {
-                const operation = {
-                    summary: `Auto-generated ${method.toUpperCase()} ${path}`,
-                    responses: {
-                        "200": {
-                            description: "Success",
-                            content: {
-                                "application/json": {
-                                    schema: {
-                                        type: "object",
-                                        properties: {
-                                            message: { type: "string" }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                };
-
-                // Extract path parameters
-                const paramMatches = path.match(/:\w+/g);
-                if (paramMatches) {
-                    operation.parameters = paramMatches.map(param => ({
-                        name: param.substring(1), // Remove ':'
-                        in: "path",
-                        required: true,
-                        schema: { type: "string" },
-                    }));
-                }
-
-                // Handle request body for POST/PUT methods
-                if (method === "post" || method === "put") {
-                    operation.requestBody = {
-                        required: true,
-                        content: {
-                            "application/json": {
-                                schema: {
-                                    type: "object",
-                                    properties: {
-                                        name: { type: "string" },
-                                    },
-                                },
-                            },
-                        },
-                    };
-                }
-
-                openApiSpec.paths[path][method] = operation;
-            });
-        }
-    });
-
-    return openApiSpec;
+// Extract OpenAPI Documentation
+try {
+    const openApiJson = extractRoutes(app);
+    fs.writeFileSync("./src/docs/openapi.json", JSON.stringify(openApiJson, null, 2));
+    fs.writeFileSync("./src/docs/openapi.yaml", yaml.stringify(openApiJson, 4));
+} catch (error) {
+    console.error("Error extracting OpenAPI documentation:", error);
 }
 
-// Generate OpenAPI JSON
-const openApiJson = extractRoutes(app);
-fs.writeFileSync("openapi.json", JSON.stringify(openApiJson, null, 2));
-console.log("✅ OpenAPI JSON file with parameters and request bodies generated!");
+// Load Swagger UI
+try {
+    const swaggerDocument = require("./src/docs/openapi.json"); // ✅ Path updated
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+} catch (error) {
+    console.error("Error loading Swagger document:", error);
+}
+
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
+    console.log(`📄 Swagger UI available at http://localhost:${PORT}/api-docs`);
+});

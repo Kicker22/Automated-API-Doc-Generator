@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+    title: Extracted Express API
+    version: 1.0.0
+paths:
+    /users:
+        get:
+            summary: GET /users
+            responses:
+                "200":
+                    description: Success
+                "400":
+                    description: Bad Request
+                "404":
+                    description: Not Found
+                "500":
+                    description: Internal Server Error
+            parameters:
+                - name: search
+                  in: query
+                  required: false
+                  schema:
+                      type: string
+                  description: Search users by name
+        post:
+            summary: POST /users
+            responses:
+                "200":
+                    description: Success
+                "400":
+                    description: Bad Request
+                "404":
+                    description: Not Found
+                "500":
+                    description: Internal Server Error
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                email:
+                                    type: string
+                                age:
+                                    type: integer
+        put:
+            summary: PUT /users
+            responses:
+                "200":
+                    description: Success
+                "400":
+                    description: Bad Request
+                "404":
+                    description: Not Found
+                "500":
+                    description: Internal Server Error
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                email:
+                                    type: string
+                                age:
+                                    type: integer
+        delete:
+            summary: DELETE /users
+            responses:
+                "200":
+                    description: Success
+                "400":
+                    description: Bad Request
+                "404":
+                    description: Not Found
+                "500":
+                    description: Internal Server Error
+    /:
+        get:
+            summary: GET /
+            responses:
+                "200":
+                    description: Success
+                "400":
+                    description: Bad Request
+                "404":
+                    description: Not Found
+                "500":
+                    description: Internal Server Error
