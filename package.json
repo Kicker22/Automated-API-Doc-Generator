@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "express": "^4.21.2",
+    "js-yaml": "^4.1.0"
+  },
+  "name": "automated-api-doc-generator",
+  "description": "This project is an **Automated API Documentation Generator** that scans code and generates **OpenAPI documentation**. It aims to streamline API documentation maintenance by automatically detecting changes and updating documentation accordingly.",
+  "version": "1.0.0",
+  "main": "apiParser.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matthew Sullivan",
+  "license": "MIT"
+}
