@@ -63,8 +63,18 @@ app.use("/api-docs", swaggerUi.serve, async (req, res, next) => {
 });
 
 
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-    console.log(`Swagger UI available at http://localhost:${PORT}/api-docs`);
-});
+
+if (require.main === module) {
+    const PORT = 3000;
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running at http://localhost:${PORT}`);
+        console.log(`📄 Swagger UI available at http://localhost:${PORT}/api-docs`);
+    });
+}
+
+// const PORT = 3000;
+// app.listen(PORT, () => {
+//     console.log(`Server running at http://localhost:${PORT}`);
+//     console.log(`Swagger UI available at http://localhost:${PORT}/api-docs`);
+// });
+module.exports = app; // ✅ Supertest will now work correctly
