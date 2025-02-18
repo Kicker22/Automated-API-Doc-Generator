@@ -11,7 +11,7 @@
   "version": "1.0.0",
   "main": "apiParser.js",
   "scripts": {
-    "start": "node apiParser.js",
+    "start": "nodemon apiParser.js",
     "dev": "nodemon apiParser.js",
     "test": "jest --coverage --verbose"
   },
