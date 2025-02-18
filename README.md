@@ -29,28 +29,6 @@ npm install  # or pip install -r requirements.txt (if using Python)
 
 Run the generator script to analyze your API code and generate documentation:
 
-```sh
-node generate-docs.js  # Replace with your actual script
-```
-
-### Validating OpenAPI Spec
-
-Ensure the generated OpenAPI spec is valid before deployment:
-
-```sh
-npx swagger-cli validate openapi.yaml
-```
-
-## CI/CD Integration
-
-This project is designed to be used with CI/CD pipelines for automation. Example GitHub Actions workflow:
-
-```
-
-## Roadmap
-
--
-
 ## License
 This project is licensed under [MIT License](LICENSE).
 
