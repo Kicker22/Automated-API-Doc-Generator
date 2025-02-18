@@ -1,95 +1,155 @@
 openapi: 3.0.0
 info:
-    title: Extracted Express API
-    version: 1.0.0
+  title: Automated API Documentation
+  description: This API automatically extracts routes from an Express.js
+    application and generates OpenAPI documentation.
+  version: 1.0.0
+  contact:
+    name: Your Name
+    email: your.email@example.com
+    url: https://yourwebsite.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+  - url: https://your-live-api.com
+    description: Production server
 paths:
-    /users:
-        get:
-            summary: GET /users
-            responses:
-                "200":
-                    description: Success
-                "400":
-                    description: Bad Request
-                "404":
-                    description: Not Found
-                "500":
-                    description: Internal Server Error
-            parameters:
-                - name: search
-                  in: query
-                  required: false
-                  schema:
-                      type: string
-                  description: Search users by name
-        post:
-            summary: POST /users
-            responses:
-                "200":
-                    description: Success
-                "400":
-                    description: Bad Request
-                "404":
-                    description: Not Found
-                "500":
-                    description: Internal Server Error
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                name:
-                                    type: string
-                                email:
-                                    type: string
-                                age:
-                                    type: integer
-        put:
-            summary: PUT /users
-            responses:
-                "200":
-                    description: Success
-                "400":
-                    description: Bad Request
-                "404":
-                    description: Not Found
-                "500":
-                    description: Internal Server Error
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                name:
-                                    type: string
-                                email:
-                                    type: string
-                                age:
-                                    type: integer
-        delete:
-            summary: DELETE /users
-            responses:
-                "200":
-                    description: Success
-                "400":
-                    description: Bad Request
-                "404":
-                    description: Not Found
-                "500":
-                    description: Internal Server Error
-    /:
-        get:
-            summary: GET /
-            responses:
-                "200":
-                    description: Success
-                "400":
-                    description: Bad Request
-                "404":
-                    description: Not Found
-                "500":
-                    description: Internal Server Error
+  "":
+    get:
+      summary: "GET "
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      parameters: []
+  /users:
+    get:
+      summary: GET /users
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search users by name or email
+        - name: role
+          in: query
+          schema:
+            type: string
+          description: Filter users by role (Admin, User, etc.)
+        - name: city
+          in: query
+          schema:
+            type: string
+          description: Filter users by city
+        - name: active
+          in: query
+          schema:
+            type: boolean
+          description: Filter users by active status (true/false)
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum:
+              - id
+              - name
+              - email
+              - age
+          description: Sort users by a field
+        - name: order
+          in: query
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          description: Sort order (asc/desc)
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          description: Page number for pagination
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          description: Number of results per page
+    post:
+      summary: POST /users
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      parameters: []
+  /users/:id:
+    put:
+      summary: PUT /users/:id
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+    delete:
+      summary: DELETE /users/:id
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  /refresh-docs:
+    post:
+      summary: POST /refresh-docs
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      parameters: []

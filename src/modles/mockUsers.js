@@ -14,31 +14,28 @@ const mockUsers = [
     { id: 10, name: "Jack Wilson", email: "jack.wilson@example.com", age: 26, city: "Dallas", phone: "(555) 012-3456", role: "User", active: true }
 ];
 
-function getUsers({ search = "", role, city, active }) {
-    let filteredUsers = mockUsers.filter(user => {
-        // Convert values to lowercase for case-insensitive matching
-        const lowerSearch = search.toLowerCase();
-        
-        // Search filter: Match name OR email
-        const matchesSearch = 
-            lowerSearch === "" || 
-            user.name.toLowerCase().includes(lowerSearch) || 
-            user.email.toLowerCase().includes(lowerSearch);
+function getUsers({ search = "", role, city, active, sortBy = "id", order = "asc", page, limit }) {
+    let filteredUsers = mockUsers.filter(user =>
+        (search ? user.name.toLowerCase().includes(search.toLowerCase()) || user.email.toLowerCase().includes(search.toLowerCase()) : true) &&
+        (role ? user.role.toLowerCase() === role.toLowerCase() : true) &&
+        (city ? user.city.toLowerCase() === city.toLowerCase() : true) &&
+        (active !== undefined ? user.active === (active === "true") : true)
+    );
 
-        // Role filter (if provided)
-        const matchesRole = role ? user.role.toLowerCase() === role.toLowerCase() : true;
-
-        // City filter (if provided)
-        const matchesCity = city ? user.city.toLowerCase() === city.toLowerCase() : true;
-
-        // Active filter (if provided)
-        const matchesActive = active !== undefined ? user.active === (active === "true") : true;
-
-        // Return true only if ALL conditions match
-        return matchesSearch && matchesRole && matchesCity && matchesActive;
+    // Sorting (Default: by ID in ascending order)
+    filteredUsers.sort((a, b) => {
+        if (!a[sortBy] || !b[sortBy]) return 0; // Prevent errors if field doesn't exist
+        return order === "desc" ? (a[sortBy] < b[sortBy] ? 1 : -1) : (a[sortBy] > b[sortBy] ? 1 : -1);
     });
+
+    // Apply pagination only if `page` and `limit` are provided
+    if (page && limit) {
+        const startIndex = (page - 1) * limit;
+        filteredUsers = filteredUsers.slice(startIndex, startIndex + limit);
+    }
 
     return { total: filteredUsers.length, users: filteredUsers };
 }
+
 
 module.exports = { mockUsers, getUsers };

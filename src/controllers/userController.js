@@ -1,8 +1,14 @@
 const { getUsers } = require("../modles/mockUsers");
 
 exports.getAllUsers = (req, res) => {
-    const { search, role, city, active } = req.query;
-    const usersData = getUsers({ search, role, city, active });
+    const { search, role, city, active, sortBy, order, page, limit } = req.query;
+
+    //Convert `page` and `limit` to numbers only if they exist
+    const pageNum = page ? Number(page) : undefined;
+    const limitNum = limit ? Number(limit) : undefined;
+
+    const usersData = getUsers({ search, role, city, active, sortBy, order, page: pageNum, limit: limitNum });
+
     res.json(usersData);
 };
 
