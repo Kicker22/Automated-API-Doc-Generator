@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../apiParser"); // Ensure this is the correct path
+const app = require("../apiParser"); //Ensure correct path
 
 describe("Users API", () => {
     it("should return a list of users", async () => {
